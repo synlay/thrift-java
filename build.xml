@@ -111,8 +111,8 @@
 
   <target name="dist" depends="compile">
     <mkdir dir="${build.dir}/META-INF"/>
-    <copy file="${thrift.root}/LICENSE" tofile="${build.dir}/META-INF/LICENSE.txt"/>
-    <copy file="${thrift.root}/NOTICE" tofile="${build.dir}/META-INF/NOTICE.txt"/>
+    <copy file="LICENSE" tofile="${build.dir}/META-INF/LICENSE.txt"/>
+    <copy file="NOTICE" tofile="${build.dir}/META-INF/NOTICE.txt"/>
     <jar jarfile="${jar.file}">
       <manifest>
         <attribute name="Implementation-Version" value="${version}"/>
