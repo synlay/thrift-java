@@ -17,22 +17,10 @@
  * under the License.
  */
 
+/**
+ * Interface for storing server's connection context
+ */
+ 
+package org.apache.thrift.server;
 
-package org.apache.thrift.protocol;
-
-
-public class TestTCompactProtocol extends ProtocolTestBase {
-  @Override
-  protected TProtocolFactory getFactory() {
-    return new TCompactProtocol.Factory();
-  }
-
-  @Override
-  protected boolean canBeUsedNaked() {
-    return true;
-  }
-
-  public static void main(String args[]) throws Exception {
-    new TestTCompactProtocol().benchmark();
-  }
-}
+public interface ServerContext {}
