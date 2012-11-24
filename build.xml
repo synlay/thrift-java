@@ -19,15 +19,15 @@
  -->
 <project name="libthrift" default="dist" basedir="."
   xmlns:artifact="antlib:org.apache.maven.artifact.ant">
-  
-  <description>Thrift Build File</description>
-  <property name="thrift.root" location="../../"/>
-  <property name="thrift.artifactid" value="libthrift"/>
-
-  <!-- Include the base properties file -->
-  <property file="${basedir}/build.properties" />
 
   <property environment="env"/>
+
+  <description>Thrift Build File</description>
+  <property name="thrift.root" location="${env.THRIFT_HOME}"/>
+  <property name="thrift.artifactid" value="libthrift"/>
+  
+  <!-- Include the base properties file -->
+  <property file="${basedir}/build.properties" />
 
   <condition property="version" value="${thrift.version}">
     <isset property="release"/>
@@ -230,19 +230,19 @@
 
   <target name="generate">
     <!-- Generate the thrift gen-java source -->
-    <exec executable="../../compiler/cpp/thrift" failonerror="true">
+    <exec executable="${thrift.root}/compiler/cpp/thrift" failonerror="true">
       <arg line="--gen java:hashcode ${test.thrift.home}/ThriftTest.thrift"/>
     </exec>
-    <exec executable="../../compiler/cpp/thrift" failonerror="true">
+    <exec executable="${thrift.root}/compiler/cpp/thrift" failonerror="true">
       <arg line="--gen java:hashcode ${test.thrift.home}/DebugProtoTest.thrift"/>
     </exec>
-    <exec executable="../../compiler/cpp/thrift" failonerror="true">
+    <exec executable="${thrift.root}/compiler/cpp/thrift" failonerror="true">
       <arg line="--gen java:hashcode ${test.thrift.home}/OptionalRequiredTest.thrift"/>
     </exec>
-    <exec executable="../../compiler/cpp/thrift" failonerror="true">
+    <exec executable="${thrift.root}/compiler/cpp/thrift" failonerror="true">
       <arg line="--gen java:beans,nocamel ${test.thrift.home}/JavaBeansTest.thrift"/>
     </exec>
-    <exec executable="../../compiler/cpp/thrift" failonerror="true">
+    <exec executable="${thrift.root}/compiler/cpp/thrift" failonerror="true">
       <arg line="--gen java:hashcode ${test.thrift.home}/ManyOptionals.thrift"/>
     </exec>
   </target>
