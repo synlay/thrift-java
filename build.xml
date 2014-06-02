@@ -25,7 +25,7 @@
   <description>Thrift Build File</description>
   <property name="thrift.root" location="${env.THRIFT_HOME}"/>
   <property name="thrift.artifactid" value="libthrift"/>
-  
+
   <!-- Include the base properties file -->
   <property file="${basedir}/build.properties" />
 
@@ -129,9 +129,6 @@
         <include name="org/apache/thrift/**/*.class"/>
         <include name="META-INF/*.txt"/>
       </fileset>
-      <fileset dir="src">
-        <include name="**/*.java"/>
-      </fileset>
     </jar>
   </target>
 
@@ -155,7 +152,12 @@
     <delete dir="${genbean}"/>
   </target>
 
-  <target name="compile-test" description="Build the test suite classes" depends="generate,dist">
+  <target name="optional-generate" unless="no-gen-thrift"> 
+    <antcall target="generate">
+    </antcall>
+  </target>
+
+  <target name="compile-test" description="Build the test suite classes" depends="optional-generate,dist">
     <javac debug="true" srcdir="${gen}" destdir="${build.test.dir}" classpathref="test.classpath" includeantruntime="false">
       <compilerarg value="-Xlint:deprecation"/>
       <!--<compilerarg value="-Xlint:unchecked"/>-->
@@ -212,15 +214,19 @@
 
   <target name="testclient" description="Run a test client" depends="compile-test">
     <java classname="org.apache.thrift.test.TestClient"
-      classpathref="test.classpath" failonerror="true">
+      classpathref="test.classpath" failonerror="true" fork="true">
+      <sysproperty key="javax.net.ssl.trustStore" value="${src.test}/.truststore"/>
+      <sysproperty key="javax.net.ssl.trustStorePassword" value="thrift"/>
       <arg line="${testargs}"/>
     </java>
   </target>
 
   <target name="testserver" description="Run a test server" depends="compile-test">
     <java classname="org.apache.thrift.test.TestServer"
-      classpathref="test.classpath" failonerror="true">
-      <arg line="${testargs}"/>
+      classpathref="test.classpath" failonerror="true" fork="true"> 
+      <sysproperty key="javax.net.ssl.keyStore" value="${src.test}/.keystore"/>
+      <sysproperty key="javax.net.ssl.keyStorePassword" value="thrift"/>
+      <arg line="${testargs}"/> 
     </java>
   </target>
 
@@ -286,9 +292,9 @@
       <remoteRepository refid="central"/>
       <remoteRepository refid="apache"/>
       <license name="The Apache Software License, Version 2.0" url="${license}"/>
-      <scm connection="scm:svn:http://svn.apache.org/repos/asf/thrift/trunk/" 
-        developerConnection="scm:svn:http://svn.apache.org/repos/asf/thrift/trunk/"
-        url="http://svn.apache.org/viewcvs.cgi/thrift"
+      <scm connection="scm:git:https://git-wip-us.apache.org/repos/asf/thrift.git" 
+      developerConnection="scm:git:https://git-wip-us.apache.org/repos/asf/thrift.git"
+      url="https://git-wip-us.apache.org/repos/asf?p=thrift.git"
       />
       <!-- Thrift Developers -->
       <developer id="mcslee" name="Mark Slee"/>
@@ -307,10 +313,12 @@
       <developer id="molinaro" name="Anthony Molinaro"/>
       <developer id="roger" name="Roger Meier"/>
       <developer id="jfarrell" name="Jake Farrell"/>
+      <developer id="jensg" name="Jens Geyer"/>
+      <developer id="carl" name="Carl Yeksigian"/>
 
       <!-- Thrift dependencies list -->
       <dependency groupId="org.slf4j" artifactId="slf4j-api" version="${slf4j.version}"/>
-      <dependency groupId="commons-lang" artifactId="commons-lang" version="${commons-lang.version}"/>
+      <dependency groupId="org.apache.commons" artifactId="commons-lang3" version="${commons-lang3.version}"/>
       <dependency groupId="javax.servlet" artifactId="servlet-api" version="${servlet.version}" scope="provided"/>
       <dependency groupId="org.apache.httpcomponents" artifactId="httpclient" version="${httpclient.version}"/>
       <dependency groupId="org.apache.httpcomponents" artifactId="httpcore" version="${httpcore.version}"/>
